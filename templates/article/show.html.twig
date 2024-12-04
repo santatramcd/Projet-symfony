@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{ article.title }}</h1>
+    <img
+              src="/uploads/{{article.featuredImage.filename}}"
+              alt="{{article.featuredImage.altText}}"
+              loading="lazy"
+              style ="width: 35%;
+              object-fit: cover;
+              aspect-ratio: 1 / 1;
+              margin: 0;
+              height: auto;"
+            />
+    <hr>
+    {{ article.content|raw }}
+    <h2 class="comment-title mt-5">
+      <span class="comment-count">{{ article.comments|length }} commentaire(s)</span>
+    </h2>
+    <hr>
+    {% if is_granted('IS_AUTHENTICATED_FULLY')%}
+    <div class="comment-area mb-5">
+      {{ form(commentForm, {'attr': {'class': 'comment-form'} }) }}
+    </div>
+  {%endif%}
+    
+
+   <div class="comment-list">
+    {% for comment in article.comments %}
+        {% include 'comment/index.html.twig' with {'comment': comment} %}
+    {% else %}
+        <p>Aucun commentaire pour cet article.</p>
+    {% endfor %}
+</div>
+
+</div>
+{% endblock %}
